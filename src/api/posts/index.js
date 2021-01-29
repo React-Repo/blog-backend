@@ -1,13 +1,16 @@
 import Router from 'koa-router';
-import * as postCtrl from './post.ctrl';
+import * as postsCtrl from './post.ctrl';
 
 const posts = new Router();
 
-posts.get('/', postCtrl.list);
-posts.post('/', postCtrl.write);
-posts.get('/:id', postCtrl.read);
-posts.delete('/:id', postCtrl.remove);
-posts.put('/:id', postCtrl.replace);
-posts.patch('/:id', postCtrl.update);
+posts.get('/', postsCtrl.list);
+posts.post('/', postsCtrl.write);
+
+const post = new Router(); // /api/posts/:id
+post.get('/', postsCtrl.read);
+post.delete('/', postsCtrl.remove);
+post.patch('/', postsCtrl.update);
+
+posts.use('/:id', postsCtrl.checkObjectId, post.routes());
 
 export default posts;
